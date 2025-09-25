@@ -1,103 +1,65 @@
-import Image from "next/image";
+// src/app/page.tsx
+import Link from "next/link";
 
-export default function Home() {
+type Post = { id: number; title: string };
+
+export default async function HomePage() {
+  // fetch ฝั่ง server
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const posts: Post[] = await res.json();
+
+  const colors = ["bg-green-100","bg-blue-100","bg-yellow-100","bg-pink-100","bg-purple-100"];
+  const textColors = ["text-green-900","text-blue-900","text-yellow-900","text-pink-900","text-purple-900"];
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-blue-50 flex flex-col items-center p-6 font-sans">
+      <h1 className="text-4xl font-extrabold mb-4 text-green-900 text-center drop-shadow-md">
+        🌟 ยินดีต้อนรับ! 🌟
+      </h1>
+      <h2 className="text-lg text-green-800 mb-6 text-center">
+        เลือกจากตัวอย่างโพสต์ หรือกรอก Post ID ด้านล่าง
+      </h2>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* ตัวอย่างโพสต์ */}
+      <div className="w-full max-w-md grid gap-4 mb-10">
+        {posts.slice(0, 5).map((post, idx) => (
+          <Link
+            key={post.id}
+            href={`/posts/${post.id}`}
+            className={`${colors[idx % colors.length]} ${textColors[idx % textColors.length]} rounded-xl p-4 shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 block font-medium`}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            {post.title}
+          </Link>
+        ))}
+      </div>
+
+      {/* Input Post ID */}
+      <div className="flex w-full max-w-md shadow-xl rounded-xl overflow-hidden bg-white">
+        <form
+          action={`/posts`}
+          method="get"
+          className="flex w-full"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <input
+            type="number"
+            name="id"
+            placeholder="กรอก Post ID"
+            className="flex-1 px-5 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-green-300"
+            id="postIdInput"
+          />
+          <button
+            type="submit"
+            onClick={() => {
+              const input = document.getElementById("postIdInput") as HTMLInputElement;
+              if (input?.value) window.location.href = `/posts/${input.value}`;
+            }}
+            className="bg-green-400 text-white px-6 py-3 font-semibold hover:bg-green-500 hover:scale-105 transition-transform duration-200"
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            ดูคอมเมนต์
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
