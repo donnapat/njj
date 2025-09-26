@@ -1,23 +1,32 @@
+// src/app/SearchPostForm.tsx
 "use client";
+import { useRouter } from "next/navigation";
+import { FormEvent } from "react";
 
-import Comments from "@/app/post-client/Comments";
+export default function SearchPostForm() {
+  const router = useRouter();
 
-type Props = { postId: number };
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const id = formData.get("id") as string;
+    if (id) router.push(`/posts/${id}`);
+  };
 
-export default function PostCommentsPage({ postId }: Props) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-blue-50 flex flex-col items-center p-6 font-sans">
-      <div className="w-full max-w-xl bg-white rounded-xl shadow-lg p-6">
-        <h1 className="text-3xl font-bold text-green-900 mb-4 drop-shadow-sm">
-          โพสต์ #{postId}
-        </h1>
-
-        <h2 className="text-2xl font-semibold mb-4 text-green-800 border-b border-green-200 pb-2">
-          💬 Comments
-        </h2>
-
-        <Comments postId={postId} />
-      </div>
-    </div>
+    <form onSubmit={handleSubmit} className="flex w-full max-w-md shadow-xl rounded-xl overflow-hidden bg-white">
+      <input
+        type="number"
+        name="id"
+        placeholder="กรอก Post ID"
+        className="flex-1 px-5 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-green-300"
+      />
+      <button
+        type="submit"
+        className="bg-green-400 text-white px-6 py-3 font-semibold hover:bg-green-500 hover:scale-105 transition-transform duration-200"
+      >
+        ดูคอมเมนต์
+      </button>
+    </form>
   );
 }
