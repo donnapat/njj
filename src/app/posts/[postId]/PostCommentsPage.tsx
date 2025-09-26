@@ -1,32 +1,34 @@
-// src/app/SearchPostForm.tsx
 "use client";
-import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
 
-export default function SearchPostForm() {
-  const router = useRouter();
+import { useComments } from "@/store/comments";
+import { useEffect } from "react";
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const id = formData.get("id") as string;
-    if (id) router.push(`/posts/${id}`);
-  };
+type Props = {
+  postId: number;
+};
+
+export default function PostCommentsPage({ postId }: Props) {
+  const { items, loading, error, fetchComments } = useComments();
+
+  useEffect(() => {
+    fetchComments(postId);
+  }, [postId, fetchComments]);
+
+  if (loading) return <p>กำลังโหลดคอมเมนต์...</p>;
+  if (error) return <p className="text-red-500">ผิดพลาด: {error}</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-md shadow-xl rounded-xl overflow-hidden bg-white">
-      <input
-        type="number"
-        name="id"
-        placeholder="กรอก Post ID"
-        className="flex-1 px-5 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-      />
-      <button
-        type="submit"
-        className="bg-green-400 text-white px-6 py-3 font-semibold hover:bg-green-500 hover:scale-105 transition-transform duration-200"
-      >
-        ดูคอมเมนต์
-      </button>
-    </form>
+    <div className="space-y-3">
+      <h2 className="text-xl font-bold">คอมเมนต์ของโพสต์ {postId}</h2>
+      <ul className="space-y-2">
+        {items.map((c) => (
+          <li key={c.id} className="border p-3 rounded-lg shadow">
+            <p className="font-semibold">{c.name}</p>
+            <p className="text-sm text-gray-600">{c.email}</p>
+            <p>{c.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
