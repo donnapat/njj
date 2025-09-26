@@ -1,12 +1,9 @@
-// src/app/posts/[id]/page.tsx
 import Comments from "@/app/post-client/Comments";
 
 type Post = { id: number; title: string; body: string };
-
 type Params = { params: { id: string } };
 
 export default async function PostDetailPage({ params }: Params) {
-  // fetch ฝั่ง server
   const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${params.id}`);
   const post: Post = await res.json();
 

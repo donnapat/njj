@@ -1,34 +1,23 @@
 "use client";
 
-import { useComments } from "@/store/comments";
-import { useEffect } from "react";
+import Comments from "@/app/post-client/Comments";
 
-type Props = {
-  postId: number;
-};
+type Props = { postId: number };
 
 export default function PostCommentsPage({ postId }: Props) {
-  const { items, loading, error, fetchComments } = useComments();
-
-  useEffect(() => {
-    fetchComments(postId);
-  }, [postId, fetchComments]);
-
-  if (loading) return <p>กำลังโหลดคอมเมนต์...</p>;
-  if (error) return <p className="text-red-500">ผิดพลาด: {error}</p>;
-
   return (
-    <div className="space-y-3">
-      <h2 className="text-xl font-bold">คอมเมนต์ของโพสต์ {postId}</h2>
-      <ul className="space-y-2">
-        {items.map((c) => (
-          <li key={c.id} className="border p-3 rounded-lg shadow">
-            <p className="font-semibold">{c.name}</p>
-            <p className="text-sm text-gray-600">{c.email}</p>
-            <p>{c.body}</p>
-          </li>
-        ))}
-      </ul>
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-blue-50 flex flex-col items-center p-6 font-sans">
+      <div className="w-full max-w-xl bg-white rounded-xl shadow-lg p-6">
+        <h1 className="text-3xl font-bold text-green-900 mb-4 drop-shadow-sm">
+          โพสต์ #{postId}
+        </h1>
+
+        <h2 className="text-2xl font-semibold mb-4 text-green-800 border-b border-green-200 pb-2">
+          💬 Comments
+        </h2>
+
+        <Comments postId={postId} />
+      </div>
     </div>
   );
 }

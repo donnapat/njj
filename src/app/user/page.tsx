@@ -23,7 +23,7 @@ export default function UsersPage() {
         if (e instanceof Error) {
           setErr(e.message);
         } else {
-          setErr("Unexpected error");
+          setErr("เกิดข้อผิดพลาดไม่ทราบสาเหตุ");
         }
       } finally {
         setLoading(false);
@@ -32,15 +32,15 @@ export default function UsersPage() {
     fetchUsers();
   }, []);
 
-  if (loading) return <p>กำลังโหลด...</p>;
-  if (err) return <p>ผิดพลาด: {err}</p>;
+  if (loading) return <p className="text-center py-4">กำลังโหลด...</p>;
+  if (err) return <p className="text-red-500 text-center py-4">ผิดพลาด: {err}</p>;
 
   return (
-    <div>
-      <h1>Users</h1>
-      <ul>
+    <div className="p-4 max-w-xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Users</h1>
+      <ul className="space-y-2">
         {users.map((u) => (
-          <li key={u.id}>
+          <li key={u.id} className="border p-3 rounded-lg shadow">
             {u.name} — {u.email}
           </li>
         ))}

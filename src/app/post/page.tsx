@@ -1,6 +1,10 @@
-import Link from "next/link";
+// src/app/post/page.tsx
+import Link from "next/link"; // เพิ่ม import Link
 
-type Post = { id: number; title: string };
+type Post = {
+  id: number;
+  title: string;
+};
 
 export default async function PostsPage() {
   const res = await fetch("https://jsonplaceholder.typicode.com/posts");

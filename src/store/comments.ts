@@ -1,3 +1,4 @@
+// src/store/comments.ts
 import { create } from "zustand";
 
 export interface Comment {
@@ -22,18 +23,13 @@ export const useComments = create<CommentsState>((set) => ({
   fetchComments: async (postId: number) => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
-      );
+      const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`);
       if (!res.ok) throw new Error("โหลดคอมเมนต์ไม่สำเร็จ");
       const data: Comment[] = await res.json();
       set({ items: data });
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        set({ error: err.message });
-      } else {
-        set({ error: "Unexpected error" });
-      }
+      if (err instanceof Error) set({ error: err.message });
+      else set({ error: "Unexpected error" });
     } finally {
       set({ loading: false });
     }
