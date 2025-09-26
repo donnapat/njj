@@ -22,12 +22,18 @@ export const useComments = create<CommentsState>((set) => ({
   fetchComments: async (postId: number) => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`);
+      const res = await fetch(
+        `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
+      );
       if (!res.ok) throw new Error("โหลดคอมเมนต์ไม่สำเร็จ");
       const data: Comment[] = await res.json();
       set({ items: data });
-    } catch (err: any) {
-      set({ error: err.message });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        set({ error: err.message });
+      } else {
+        set({ error: "Unexpected error" });
+      }
     } finally {
       set({ loading: false });
     }

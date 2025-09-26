@@ -15,10 +15,16 @@ export default function UsersPage() {
       setLoading(true);
       setErr(null);
       try {
-        const res = await axios.get<User[]>("https://jsonplaceholder.typicode.com/users");
+        const res = await axios.get<User[]>(
+          "https://jsonplaceholder.typicode.com/users"
+        );
         setUsers(res.data);
-      } catch (e: any) {
-        setErr(e.message);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          setErr(e.message);
+        } else {
+          setErr("Unexpected error");
+        }
       } finally {
         setLoading(false);
       }
@@ -34,7 +40,9 @@ export default function UsersPage() {
       <h1>Users</h1>
       <ul>
         {users.map((u) => (
-          <li key={u.id}>{u.name} — {u.email}</li>
+          <li key={u.id}>
+            {u.name} — {u.email}
+          </li>
         ))}
       </ul>
     </div>

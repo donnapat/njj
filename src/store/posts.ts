@@ -1,30 +1,18 @@
-// src/store/posts.ts 
+// src/store/posts.ts
 
-"use client"; 
+"use client";
 
-import { create } from "zustand"; 
+import { create } from "zustand";
+import axios from "axios";
 
-import axios from "axios"; 
+type Post = { id: number; title: string; body: string };
 
- 
-
-type Post = { id: number; title: string; body: string }; 
-
- 
-
-type State = { 
-
-  items: Post[]; 
-
-  loading: boolean; 
-
-  error: string | null; 
-
-  fetchData: () => Promise<void>; 
-
-}; 
-
- 
+type State = {
+  items: Post[];
+  loading: boolean;
+  error: string | null;
+  fetchData: () => Promise<void>;
+};
 
 export const usePosts = create<State>((set) => ({
   items: [],
@@ -38,8 +26,12 @@ export const usePosts = create<State>((set) => ({
         "https://jsonplaceholder.typicode.com/posts"
       );
       set({ items: data });
-    } catch (error: any) {
-      set({ error: error.message || "เกิดข้อผิดพลาดในการโหลดข้อมูล" });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message });
+      } else {
+        set({ error: "เกิดข้อผิดพลาดในการโหลดข้อมูล" });
+      }
     } finally {
       set({ loading: false }); // โหลดเสร็จ
     }
